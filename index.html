@@ -118,6 +118,8 @@ input,select{font-family:inherit}
   box-shadow:0 6px 18px rgba(40,192,118,.32);
 }
 .big-draft:hover{background:#31d182}
+.big-draft.logging{background:var(--panel2);color:var(--muted);border:1px solid var(--line2);box-shadow:none}
+.big-draft.logging:hover{background:var(--raise);color:var(--ink)}
 .ghost{
   padding:14px 16px;border-radius:12px;border:1px solid var(--line2);background:var(--panel);
   font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
@@ -241,6 +243,11 @@ input,select{font-family:inherit}
   display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);
 }
 .qbtn:hover{color:var(--ink);border-color:var(--go2)}
+.qbtn.mine,.qbtn.out{width:auto;padding:0 9px;font-family:"Saira Condensed";font-weight:700;font-size:11px;letter-spacing:.06em}
+.qbtn.mine{color:var(--go);border-color:var(--go2)}
+.qbtn.mine:hover{background:var(--go);color:#04130b;border-color:var(--go)}
+.qbtn.out{color:var(--faint)}
+.qbtn.out:hover{color:var(--red);border-color:var(--red)}
 .qbtn.me:hover{color:var(--go);border-color:var(--go)}
 .qbtn.watch.on{color:var(--gold);border-color:var(--gold)}
 .action-tag{font-family:"Saira Condensed";font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
@@ -395,7 +402,7 @@ input[type=file]{display:none}
               <option value="value">Sort: Value</option>
             </select>
           </div>
-          <div class="sv-legend">% = odds still available at <b>your next pick</b> · <span class="sv-chip sv-take">take now</span> <span class="sv-chip sv-flip">50/50</span> <span class="sv-chip sv-wait">can wait</span> · <span class="ts-pill">%</span> = 2025 target share</div>
+          <div class="sv-legend"><b style="color:var(--go)">MINE</b> = draft to your team · <b style="color:var(--faint)">OUT</b> = taken by another team · <span class="ts-pill">%</span> = 2025 target share · right-side % = odds available at your next pick</div>
           <div class="list" id="boardList"></div>
         </div>
 
@@ -936,7 +943,7 @@ function renderHero(){
         </div>
       </div>
       <div class="rec-actions">
-        <button class="big-draft" onclick="draftAtClock(${p.id})">${mine?'Draft '+esc(firstName(p.name)):'Mark drafted'}</button>
+        <button class="big-draft ${mine?'':'logging'}" onclick="draftAtClock(${p.id})">${mine?'Draft '+esc(firstName(p.name)):'Log Team '+onClockTeam+' pick'}</button>
         <button class="ghost" onclick="openPlayer(${p.id})">Details</button>
         <button class="ghost danger" onclick="undo()">↩ Undo</button>
       </div>
@@ -1003,9 +1010,9 @@ function renderBoard(){
       </div>
       <div class="p-champ" style="color:${champCol}">${r.champ}</div>
       <div class="p-act">
-        <button class="qbtn watch ${watch[p.id]?'on':''}" title="Watch" onclick="setWatch(${p.id},'target')">★</button>
-        <button class="qbtn me" title="Drafted by me" onclick="draftPlayer(${p.id},'me')">＋</button>
-        <button class="qbtn" title="Drafted by another team" onclick="draftPlayer(${p.id},overallToTeam(currentOverall()))">✓</button>
+        <button class="qbtn watch ${watch[p.id]?'on':''}" title="Add to your watchlist" onclick="setWatch(${p.id},'target')">★</button>
+        <button class="qbtn mine" title="Draft to MY team" onclick="draftPlayer(${p.id},'me')">MINE</button>
+        <button class="qbtn out" title="Taken by another team (off the board)" onclick="draftPlayer(${p.id},overallToTeam(currentOverall()))">OUT</button>
       </div>
     </div>`;
   }).join("");
